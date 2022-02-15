@@ -99,9 +99,11 @@ header{
 
 /*  TABLE   =======================================================*/
 #data-table{
+    display: block;
     width: 100%;
     border-spacing: 0 0.5rem; /*espaço vertical e horizontal*/
-    color: #969cb3
+    color: #969cb3;
+    overflow-x:auto;
 }
 table thead tr th:first-child, 
 table tbody tr td:first-child{
@@ -148,5 +150,12 @@ footer{
 
 /*  RESPONSIVE  ===================================================*/
 @media (min-width:800px){
-
+    html{
+        font-size: 87.5%; /*14px*/
+    }
+    #balance{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /*função pra repetir a fração*/
+        gap: 2rem;
+    }
 }
