@@ -105,7 +105,7 @@ const Utils = { //formatação do valor na tabela
     formatAmount(value){
         //receber o amount e vai fazer o retorno de um valor formatado
         value = Number(value) * 100 // transformando a string em numebro e multiplicando por 100
-        return value // retornando o value para o amount
+        return Math.round(value) // retornando o value para o amount
     },
 
     formatDate(date){
