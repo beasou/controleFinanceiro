@@ -107,6 +107,18 @@ const DOM = {
 }
 
 const Utils = { //formatação do valor na tabela
+    formatAmount(value){
+        //receber o amount e vai fazer o retorno de um valor formatado
+        value = Number(value) * 100 // transformando a string em numebro e multiplicando por 100
+        return value // retornando o value para o amount
+    },
+
+    formatDate(date){
+        const splittedDate = date.split("-")//separando a string pelo -  e colocando no array
+        return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}` //organizando a data pelo array pego
+        
+    },
+
     formatCurrency(value){
         const signal = Number(value) < 0 ? "-" : "" //se o valor for menor que 0 atribui sinal de negativio
         
@@ -136,9 +148,6 @@ const Form = {//pegando o formulario atraves do id
         }
     },
 
-   // formatData(){
-
-   // },
     validateFields(){//validando os campos preenchidos
         const{description, amount, date} = Form.getValues()
 
@@ -149,19 +158,54 @@ const Form = {//pegando o formulario atraves do id
             throw new Error("Preencha todos os campos") //SE VAZIO DISPARAR O ERRO
             }
     },
+
+    // FORMATANDO OS VALORES
+    formatValues(){
+        let {description, amount, date} = Form.getValues()
+        amount = Utils.formatAmount(amount) //valor dinheiro digitado
+        date = Utils.formatDate(date) // valor data digitado
+
+        return{
+            description,
+            amount,
+            date
+        }
+
+    },
+
+    //SALVANDO OS DADOS DO FORMULARIO
+    saveTransaction(transaction){
+        Transaction.add(transaction) //dava pra colar isso direto em salvar no submit
+    },
+
+    //LIMPANDO OS DADOS DO FORMULARIO
+    clearFields(){
+        Form.description.value = ""
+        Form.amount.value = ""
+        Form.date.value = ""
+    },
+
     submit(event){
         event.preventDefault()
        
         try {//VOU TENTAR FAZER
-        //verificar se todas as informações foram preenchidas
-        Form.validateFields()
+            //verificar se todas as informações foram preenchidas
+            Form.validateFields()
+            
+            //formatar os dados para salvar
+            const transaction = Form.formatValues()
+            
+            //salvar
+            Form.saveTransaction(transaction)
 
-        //formatar os dados para salvar
-        //Form.formatData()
-        //salvar
-        //apagar os dados do formulário
-        //modal feche
-        //atualizar a aplicação
+            //apagar os dados do formulário
+            Form.clearFields()
+
+            //modal feche
+            Modal.close()
+
+            //atualizar a aplicação 
+            // App.reload() //ja tem um App.reload() no  const Transaction {add(transaction)}
             
         } catch (error) { //CAPTURAR O ERRO
             alert(error.message)
