@@ -63,12 +63,14 @@ const DOM = {
     //TRANSAÇÕES
     addTransaction(transaction, index){ //recebe a transação q vai add e um index, em que local vai colocar a transação
         const tr = document.createElement('tr') //criando um elemento <tr> através da DOM
-        tr.innerHTML = DOM.innerHTMLTransaction(transaction) //receber o html abaixo
+        tr.innerHTML = DOM.innerHTMLTransaction(transaction, index) //receber o html abaixo
+        tr.dataset.index = index
+
         DOM.transactionsContainer.appendChild(tr)//elemento que foi criado tr
     },
 
     //INSERÇÃO DAS LINHAS DA TABELA HTML
-    innerHTMLTransaction(transaction){
+    innerHTMLTransaction(transaction, index){
         const CSSclass = transaction.amount > 0 ? "income" : "expense"
         
         const amount = Utils.formatCurrency(transaction.amount) //pega o valor da formatação da moeda
@@ -78,7 +80,7 @@ const DOM = {
             <td class="${CSSclass}">${amount}</td> 
             <td class="date">${transaction.date}</td>
             <td>
-                <img src="./assets/minus.svg" alt="Remover transação">
+                <img onclick="Transaction.remove(${index})" src="./assets/minus.svg" alt="Remover transação">
             </td>
         `
         return html //vai retornar o html no momento em que  innerHTMLTransaction() for chamado para ser adicionado dentro do <tr> 
@@ -217,8 +219,8 @@ const Form = {//pegando o formulario atraves do id
 
 const App = {
     init(){
-        Transaction.all.forEach(transaction =>{
-            DOM.addTransaction(transaction)
+        Transaction.all.forEach((transaction, index) =>{
+            DOM.addTransaction(transaction, index)
         })
         
         DOM.updateBalance()
