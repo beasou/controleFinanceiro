@@ -1,23 +1,16 @@
+const Storage = {
+    get(){
+        return JSON.parse(localStorage.getItem("dev.finances:transactions")) || []
+    },
+
+    set(transactions){
+        localStorage.setItem("dev.finances:transactions", JSON.stringify(transactions))
+    }
+}
 
 const Transaction = {
-    all:[
-        {
-            description:'Luz',
-            amount: -50000,
-            date: '23/01/2021',
-        },
-        {
-            description:'Website',
-            amount: 500000,
-            date: '23/01/2021',
-        },
-        {
-            description:'Aluguel',
-            amount: -1550000,
-            date: '23/01/2021',
-        },
-    ]
-    ,
+    all:Storage.get(),
+
     add(transaction){
         Transaction.all.push(transaction)
         App.reload()
@@ -221,14 +214,17 @@ const App = {
     init(){
         Transaction.all.forEach((transaction, index) =>{
             DOM.addTransaction(transaction, index)
-        })
+        }) //adicionando na dom
         
-        DOM.updateBalance()
+        DOM.updateBalance() //atualizando o balanço
+
+        Storage.set(Transaction.all) //mandar todas
     },
     reload(){
         DOM.clearTransactions()
         App.init()
     },
 }
+
 
 App.init()
